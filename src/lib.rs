@@ -119,7 +119,6 @@ impl<'a> ImGuiSDL2<'a> {
                 if button.button == SDL_BUTTON_X2 as u8 {
                     self.mouse_press[4] = true
                 };
-                println!("Hi");
                 true
             }
             SDL_EventType_SDL_TEXTINPUT => {
