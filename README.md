@@ -21,4 +21,4 @@ Call this in your hook, where "event" is a SDL_Event reference:
 
 ## Notes
 
-Currently, one event isn't handled properly. In the case that someone somehow finds this repository today: I'll fix it tomorrow.
+Clipboard support is missing. I'll add it later.
