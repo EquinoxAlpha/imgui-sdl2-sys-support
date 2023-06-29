@@ -1,10 +1,12 @@
 #![allow(non_upper_case_globals)]
 #![allow(non_camel_case_types)]
-pub mod bindings;
+
+pub extern crate sdl2_bindings;
+
 
 use std::ffi::CString;
 
-use bindings::{
+use sdl2_bindings::{
     SDL_Event, SDL_EventType_SDL_KEYDOWN, SDL_EventType_SDL_KEYUP,
     SDL_EventType_SDL_MOUSEBUTTONDOWN, SDL_EventType_SDL_MOUSEBUTTONUP,
     SDL_EventType_SDL_MOUSEMOTION, SDL_EventType_SDL_MOUSEWHEEL, SDL_EventType_SDL_TEXTINPUT,
@@ -52,7 +54,9 @@ use bindings::{
     SDL_WindowFlags_SDL_WINDOW_INPUT_FOCUS, SDL_WindowFlags_SDL_WINDOW_MINIMIZED,
     SDL_bool_SDL_FALSE, SDL_bool_SDL_TRUE, SDL_BUTTON_LEFT, SDL_BUTTON_MIDDLE, SDL_BUTTON_RIGHT,
     SDL_BUTTON_X1, SDL_BUTTON_X2, SDL_Cursor, SDL_CreateSystemCursor, SDL_SystemCursor_SDL_SYSTEM_CURSOR_ARROW, SDL_SystemCursor_SDL_SYSTEM_CURSOR_IBEAM, SDL_SystemCursor_SDL_SYSTEM_CURSOR_SIZEALL, SDL_SystemCursor_SDL_SYSTEM_CURSOR_SIZENS, SDL_SystemCursor_SDL_SYSTEM_CURSOR_SIZEWE, SDL_SystemCursor_SDL_SYSTEM_CURSOR_SIZENESW, SDL_SystemCursor_SDL_SYSTEM_CURSOR_SIZENWSE, SDL_SystemCursor_SDL_SYSTEM_CURSOR_HAND, SDL_SystemCursor_SDL_SYSTEM_CURSOR_NO, SDL_SetClipboardText, SDL_Rect, SDL_SetTextInputRect,
+    SDL_free, SDL_GetClipboardText,
 };
+
 use imgui_sys::{
     ImGuiKey_F10, ImGuiKey_None, ImGuiMod_Alt, ImGuiMod_Ctrl, ImGuiMod_Shift, ImGuiMod_Super,
     ImGuiMouseCursor_None, ImGuiMouseCursor_Arrow, ImGuiMouseCursor_TextInput, ImGuiMouseCursor_ResizeAll, ImGuiMouseCursor_ResizeNS, ImGuiMouseCursor_ResizeNESW, ImGuiMouseCursor_ResizeNWSE, ImGuiMouseCursor_ResizeEW, ImGuiMouseCursor_Hand, ImGuiMouseCursor_NotAllowed, cty, ImGuiPlatformImeData,
@@ -81,8 +85,6 @@ use imgui_sys::{
 };
 
 use imgui::{internal::RawCast, Context, Io, Key};
-
-use crate::bindings::{SDL_free, SDL_GetClipboardText};
 
 pub struct ImGuiSDL2 {
     mouse_press: [bool; 5],
