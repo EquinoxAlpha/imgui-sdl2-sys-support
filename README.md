@@ -20,3 +20,4 @@ Call this in your hook, where "event" is a SDL_Event reference:
 ## Notes
 
 Clipboard support is missing. I'll add it later.
+SDL cursor changing is not supported. I'll maybe add it later.
