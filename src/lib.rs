@@ -4,84 +4,9 @@
 
 pub extern crate sdl2_bindings;
 
-use sdl2_bindings::{
-    SDL_CreateSystemCursor, SDL_Cursor, SDL_Event, SDL_EventType_SDL_KEYDOWN,
-    SDL_EventType_SDL_KEYUP, SDL_EventType_SDL_MOUSEBUTTONDOWN, SDL_EventType_SDL_MOUSEBUTTONUP,
-    SDL_EventType_SDL_MOUSEMOTION, SDL_EventType_SDL_MOUSEWHEEL, SDL_EventType_SDL_TEXTINPUT,
-    SDL_GL_GetDrawableSize, SDL_GetClipboardText, SDL_GetMouseState, SDL_GetPerformanceCounter,
-    SDL_GetPerformanceFrequency, SDL_GetWindowFlags, SDL_GetWindowSize, SDL_KeyCode_SDLK_0,
-    SDL_KeyCode_SDLK_1, SDL_KeyCode_SDLK_2, SDL_KeyCode_SDLK_3, SDL_KeyCode_SDLK_4,
-    SDL_KeyCode_SDLK_5, SDL_KeyCode_SDLK_6, SDL_KeyCode_SDLK_7, SDL_KeyCode_SDLK_8,
-    SDL_KeyCode_SDLK_9, SDL_KeyCode_SDLK_APPLICATION, SDL_KeyCode_SDLK_BACKQUOTE,
-    SDL_KeyCode_SDLK_BACKSLASH, SDL_KeyCode_SDLK_BACKSPACE, SDL_KeyCode_SDLK_CAPSLOCK,
-    SDL_KeyCode_SDLK_COMMA, SDL_KeyCode_SDLK_DELETE, SDL_KeyCode_SDLK_DOWN, SDL_KeyCode_SDLK_END,
-    SDL_KeyCode_SDLK_EQUALS, SDL_KeyCode_SDLK_ESCAPE, SDL_KeyCode_SDLK_F1, SDL_KeyCode_SDLK_F10,
-    SDL_KeyCode_SDLK_F11, SDL_KeyCode_SDLK_F12, SDL_KeyCode_SDLK_F2, SDL_KeyCode_SDLK_F3,
-    SDL_KeyCode_SDLK_F4, SDL_KeyCode_SDLK_F5, SDL_KeyCode_SDLK_F6, SDL_KeyCode_SDLK_F7,
-    SDL_KeyCode_SDLK_F8, SDL_KeyCode_SDLK_F9, SDL_KeyCode_SDLK_HOME, SDL_KeyCode_SDLK_INSERT,
-    SDL_KeyCode_SDLK_KP_0, SDL_KeyCode_SDLK_KP_1, SDL_KeyCode_SDLK_KP_2, SDL_KeyCode_SDLK_KP_3,
-    SDL_KeyCode_SDLK_KP_4, SDL_KeyCode_SDLK_KP_5, SDL_KeyCode_SDLK_KP_6, SDL_KeyCode_SDLK_KP_7,
-    SDL_KeyCode_SDLK_KP_8, SDL_KeyCode_SDLK_KP_9, SDL_KeyCode_SDLK_KP_DIVIDE,
-    SDL_KeyCode_SDLK_KP_ENTER, SDL_KeyCode_SDLK_KP_EQUALS, SDL_KeyCode_SDLK_KP_MINUS,
-    SDL_KeyCode_SDLK_KP_MULTIPLY, SDL_KeyCode_SDLK_KP_PERIOD, SDL_KeyCode_SDLK_KP_PLUS,
-    SDL_KeyCode_SDLK_LALT, SDL_KeyCode_SDLK_LCTRL, SDL_KeyCode_SDLK_LEFT,
-    SDL_KeyCode_SDLK_LEFTBRACKET, SDL_KeyCode_SDLK_LGUI, SDL_KeyCode_SDLK_LSHIFT,
-    SDL_KeyCode_SDLK_MINUS, SDL_KeyCode_SDLK_NUMLOCKCLEAR, SDL_KeyCode_SDLK_PAGEDOWN,
-    SDL_KeyCode_SDLK_PAGEUP, SDL_KeyCode_SDLK_PAUSE, SDL_KeyCode_SDLK_PERIOD,
-    SDL_KeyCode_SDLK_PRINTSCREEN, SDL_KeyCode_SDLK_QUOTE, SDL_KeyCode_SDLK_RALT,
-    SDL_KeyCode_SDLK_RCTRL, SDL_KeyCode_SDLK_RETURN, SDL_KeyCode_SDLK_RGUI, SDL_KeyCode_SDLK_RIGHT,
-    SDL_KeyCode_SDLK_RIGHTBRACKET, SDL_KeyCode_SDLK_RSHIFT, SDL_KeyCode_SDLK_SCROLLLOCK,
-    SDL_KeyCode_SDLK_SEMICOLON, SDL_KeyCode_SDLK_SLASH, SDL_KeyCode_SDLK_SPACE,
-    SDL_KeyCode_SDLK_TAB, SDL_KeyCode_SDLK_UP, SDL_KeyCode_SDLK_a, SDL_KeyCode_SDLK_b,
-    SDL_KeyCode_SDLK_c, SDL_KeyCode_SDLK_d, SDL_KeyCode_SDLK_e, SDL_KeyCode_SDLK_f,
-    SDL_KeyCode_SDLK_g, SDL_KeyCode_SDLK_h, SDL_KeyCode_SDLK_i, SDL_KeyCode_SDLK_j,
-    SDL_KeyCode_SDLK_k, SDL_KeyCode_SDLK_l, SDL_KeyCode_SDLK_m, SDL_KeyCode_SDLK_n,
-    SDL_KeyCode_SDLK_o, SDL_KeyCode_SDLK_p, SDL_KeyCode_SDLK_q, SDL_KeyCode_SDLK_r,
-    SDL_KeyCode_SDLK_s, SDL_KeyCode_SDLK_t, SDL_KeyCode_SDLK_u, SDL_KeyCode_SDLK_v,
-    SDL_KeyCode_SDLK_w, SDL_KeyCode_SDLK_x, SDL_KeyCode_SDLK_y, SDL_KeyCode_SDLK_z, SDL_Keymod,
-    SDL_Keymod_KMOD_ALT, SDL_Keymod_KMOD_CTRL, SDL_Keymod_KMOD_GUI, SDL_Keymod_KMOD_SHIFT,
-    SDL_Rect, SDL_SetClipboardText, SDL_SetCursor, SDL_SetTextInputRect, SDL_ShowCursor,
-    SDL_SystemCursor_SDL_SYSTEM_CURSOR_ARROW, SDL_SystemCursor_SDL_SYSTEM_CURSOR_HAND,
-    SDL_SystemCursor_SDL_SYSTEM_CURSOR_IBEAM, SDL_SystemCursor_SDL_SYSTEM_CURSOR_NO,
-    SDL_SystemCursor_SDL_SYSTEM_CURSOR_SIZEALL, SDL_SystemCursor_SDL_SYSTEM_CURSOR_SIZENESW,
-    SDL_SystemCursor_SDL_SYSTEM_CURSOR_SIZENS, SDL_SystemCursor_SDL_SYSTEM_CURSOR_SIZENWSE,
-    SDL_SystemCursor_SDL_SYSTEM_CURSOR_SIZEWE, SDL_WarpMouseInWindow, SDL_Window,
-    SDL_WindowFlags_SDL_WINDOW_INPUT_FOCUS, SDL_WindowFlags_SDL_WINDOW_MINIMIZED,
-    SDL_bool_SDL_FALSE, SDL_bool_SDL_TRUE, SDL_free, SDL_BUTTON_LEFT, SDL_BUTTON_MIDDLE,
-    SDL_BUTTON_RIGHT, SDL_BUTTON_X1, SDL_BUTTON_X2,
-};
-
-use imgui_sys::{
-    cty, ImGuiKey_F10, ImGuiKey_None, ImGuiKey_Q, ImGuiMod_Alt, ImGuiMod_Ctrl, ImGuiMod_Shift,
-    ImGuiMod_Super, ImGuiMouseCursor_Arrow, ImGuiMouseCursor_Hand, ImGuiMouseCursor_None,
-    ImGuiMouseCursor_NotAllowed, ImGuiMouseCursor_ResizeAll, ImGuiMouseCursor_ResizeEW,
-    ImGuiMouseCursor_ResizeNESW, ImGuiMouseCursor_ResizeNS, ImGuiMouseCursor_ResizeNWSE,
-    ImGuiMouseCursor_TextInput, ImGuiPlatformImeData,
-};
-
-use imgui_sys::{
-    ImGuiKey_0, ImGuiKey_1, ImGuiKey_2, ImGuiKey_3, ImGuiKey_4, ImGuiKey_5, ImGuiKey_6, ImGuiKey_7,
-    ImGuiKey_8, ImGuiKey_9, ImGuiKey_A, ImGuiKey_Apostrophe, ImGuiKey_B, ImGuiKey_Backslash,
-    ImGuiKey_Backspace, ImGuiKey_C, ImGuiKey_CapsLock, ImGuiKey_Comma, ImGuiKey_D, ImGuiKey_Delete,
-    ImGuiKey_DownArrow, ImGuiKey_E, ImGuiKey_End, ImGuiKey_Enter, ImGuiKey_Equal, ImGuiKey_Escape,
-    ImGuiKey_F, ImGuiKey_F1, ImGuiKey_F11, ImGuiKey_F12, ImGuiKey_F2, ImGuiKey_F3, ImGuiKey_F4,
-    ImGuiKey_F5, ImGuiKey_F6, ImGuiKey_F7, ImGuiKey_F8, ImGuiKey_F9, ImGuiKey_G,
-    ImGuiKey_GraveAccent, ImGuiKey_H, ImGuiKey_Home, ImGuiKey_I, ImGuiKey_Insert, ImGuiKey_J,
-    ImGuiKey_K, ImGuiKey_Keypad0, ImGuiKey_Keypad1, ImGuiKey_Keypad2, ImGuiKey_Keypad3,
-    ImGuiKey_Keypad4, ImGuiKey_Keypad5, ImGuiKey_Keypad6, ImGuiKey_Keypad7, ImGuiKey_Keypad8,
-    ImGuiKey_Keypad9, ImGuiKey_KeypadAdd, ImGuiKey_KeypadDecimal, ImGuiKey_KeypadDivide,
-    ImGuiKey_KeypadEnter, ImGuiKey_KeypadEqual, ImGuiKey_KeypadMultiply, ImGuiKey_KeypadSubtract,
-    ImGuiKey_L, ImGuiKey_LeftAlt, ImGuiKey_LeftArrow, ImGuiKey_LeftBracket, ImGuiKey_LeftCtrl,
-    ImGuiKey_LeftShift, ImGuiKey_LeftSuper, ImGuiKey_M, ImGuiKey_Menu, ImGuiKey_Minus, ImGuiKey_N,
-    ImGuiKey_NumLock, ImGuiKey_O, ImGuiKey_P, ImGuiKey_PageDown, ImGuiKey_PageUp, ImGuiKey_Pause,
-    ImGuiKey_Period, ImGuiKey_PrintScreen, ImGuiKey_R, ImGuiKey_RightAlt, ImGuiKey_RightArrow,
-    ImGuiKey_RightBracket, ImGuiKey_RightCtrl, ImGuiKey_RightShift, ImGuiKey_RightSuper,
-    ImGuiKey_S, ImGuiKey_ScrollLock, ImGuiKey_Semicolon, ImGuiKey_Slash, ImGuiKey_Space,
-    ImGuiKey_T, ImGuiKey_Tab, ImGuiKey_U, ImGuiKey_UpArrow, ImGuiKey_V, ImGuiKey_W, ImGuiKey_X,
-    ImGuiKey_Y, ImGuiKey_Z,
-};
-
 use imgui::{internal::RawCast, Context, Io};
+use imgui_sys::*;
+use sdl2_bindings::*;
 
 pub struct ImGuiSDL2 {
     frequency: u64,
@@ -90,9 +15,6 @@ pub struct ImGuiSDL2 {
     clipboard_data: Option<*mut cty::c_char>,
     mouse_cursors: Vec<*mut SDL_Cursor>,
 }
-
-unsafe impl Send for ImGuiSDL2 {}
-unsafe impl Sync for ImGuiSDL2 {}
 
 impl ImGuiSDL2 {
     pub fn new(imgui: &mut Context) -> Self {
@@ -365,28 +287,14 @@ impl ImGuiSDL2 {
                     true
                 }
                 SDL_EventType_SDL_MOUSEBUTTONUP | SDL_EventType_SDL_MOUSEBUTTONDOWN => {
-                    let button = event.button;
-                    let mut mouse_button = -1;
-
-                    if button.button == SDL_BUTTON_LEFT as u8 {
-                        mouse_button = 0;
+                    let mouse_button = match event.button.button as u32 {
+                        SDL_BUTTON_LEFT => 0,
+                        SDL_BUTTON_RIGHT => 1,
+                        SDL_BUTTON_MIDDLE => 2,
+                        SDL_BUTTON_X1 => 3,
+                        SDL_BUTTON_X2 => 4,
+                        _ => return false,
                     };
-                    if button.button == SDL_BUTTON_RIGHT as u8 {
-                        mouse_button = 1;
-                    };
-                    if button.button == SDL_BUTTON_MIDDLE as u8 {
-                        mouse_button = 2;
-                    };
-                    if button.button == SDL_BUTTON_X1 as u8 {
-                        mouse_button = 3;
-                    };
-                    if button.button == SDL_BUTTON_X2 as u8 {
-                        mouse_button = 4;
-                    };
-
-                    if mouse_button == -1 {
-                        return false;
-                    }
 
                     imgui_sys::ImGuiIO_AddMouseButtonEvent(
                         io.raw_mut(),
@@ -480,11 +388,11 @@ impl ImGuiSDL2 {
 
                 io.display_framebuffer_scale[0] = (display_width as f32) / width as f32;
                 io.display_framebuffer_scale[1] = (display_height as f32) / height as f32;
+
+                io.display_size[0] = width as f32;
+                io.display_size[1] = height as f32;
             }
         }
-
-        io.display_size[0] = width as f32;
-        io.display_size[1] = height as f32;
 
         let current_time = unsafe { SDL_GetPerformanceCounter() };
         io.delta_time = if self.time > 0 {

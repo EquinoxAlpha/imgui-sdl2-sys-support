@@ -1,4 +1,4 @@
-# imgui-sdl2-sys-support
+# imgui-sdl2-sys
 Simple SDL2 input handling support for imgui-rs using only C bindings
 
 You will still need a renderer.
