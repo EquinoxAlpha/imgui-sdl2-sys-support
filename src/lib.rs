@@ -40,15 +40,15 @@ use sdl2_bindings::{
     SDL_KeyCode_SDLK_s, SDL_KeyCode_SDLK_t, SDL_KeyCode_SDLK_u, SDL_KeyCode_SDLK_v,
     SDL_KeyCode_SDLK_w, SDL_KeyCode_SDLK_x, SDL_KeyCode_SDLK_y, SDL_KeyCode_SDLK_z, SDL_Keymod,
     SDL_Keymod_KMOD_ALT, SDL_Keymod_KMOD_CTRL, SDL_Keymod_KMOD_GUI, SDL_Keymod_KMOD_SHIFT,
-    SDL_Rect, SDL_SetClipboardText, SDL_SetCursor, SDL_SetTextInputRect,
-    SDL_ShowCursor, SDL_SystemCursor_SDL_SYSTEM_CURSOR_ARROW,
-    SDL_SystemCursor_SDL_SYSTEM_CURSOR_HAND, SDL_SystemCursor_SDL_SYSTEM_CURSOR_IBEAM,
-    SDL_SystemCursor_SDL_SYSTEM_CURSOR_NO, SDL_SystemCursor_SDL_SYSTEM_CURSOR_SIZEALL,
-    SDL_SystemCursor_SDL_SYSTEM_CURSOR_SIZENESW, SDL_SystemCursor_SDL_SYSTEM_CURSOR_SIZENS,
-    SDL_SystemCursor_SDL_SYSTEM_CURSOR_SIZENWSE, SDL_SystemCursor_SDL_SYSTEM_CURSOR_SIZEWE,
-    SDL_WarpMouseInWindow, SDL_Window, SDL_WindowFlags_SDL_WINDOW_INPUT_FOCUS,
-    SDL_WindowFlags_SDL_WINDOW_MINIMIZED, SDL_bool_SDL_FALSE, SDL_bool_SDL_TRUE, SDL_free,
-    SDL_BUTTON_LEFT, SDL_BUTTON_MIDDLE, SDL_BUTTON_RIGHT, SDL_BUTTON_X1, SDL_BUTTON_X2,
+    SDL_Rect, SDL_SetClipboardText, SDL_SetCursor, SDL_SetTextInputRect, SDL_ShowCursor,
+    SDL_SystemCursor_SDL_SYSTEM_CURSOR_ARROW, SDL_SystemCursor_SDL_SYSTEM_CURSOR_HAND,
+    SDL_SystemCursor_SDL_SYSTEM_CURSOR_IBEAM, SDL_SystemCursor_SDL_SYSTEM_CURSOR_NO,
+    SDL_SystemCursor_SDL_SYSTEM_CURSOR_SIZEALL, SDL_SystemCursor_SDL_SYSTEM_CURSOR_SIZENESW,
+    SDL_SystemCursor_SDL_SYSTEM_CURSOR_SIZENS, SDL_SystemCursor_SDL_SYSTEM_CURSOR_SIZENWSE,
+    SDL_SystemCursor_SDL_SYSTEM_CURSOR_SIZEWE, SDL_WarpMouseInWindow, SDL_Window,
+    SDL_WindowFlags_SDL_WINDOW_INPUT_FOCUS, SDL_WindowFlags_SDL_WINDOW_MINIMIZED,
+    SDL_bool_SDL_FALSE, SDL_bool_SDL_TRUE, SDL_free, SDL_BUTTON_LEFT, SDL_BUTTON_MIDDLE,
+    SDL_BUTTON_RIGHT, SDL_BUTTON_X1, SDL_BUTTON_X2,
 };
 
 use imgui_sys::{
@@ -84,7 +84,6 @@ use imgui_sys::{
 use imgui::{internal::RawCast, Context, Io};
 
 pub struct ImGuiSDL2 {
-    mouse_press: [bool; 5],
     frequency: u64,
     time: u64,
     last_cursor: Option<*const SDL_Cursor>,
@@ -127,22 +126,13 @@ impl ImGuiSDL2 {
                 SDL_CreateSystemCursor(SDL_SystemCursor_SDL_SYSTEM_CURSOR_NO);
         }
 
-        //for _ in 0..9 {
-        //    mouse_cursors.push(std::ptr::null_mut());
-        //}
-
-        println!("len: {}", mouse_cursors.len());
-
         let result = Self {
-            mouse_press: [false; 5],
             frequency: unsafe { SDL_GetPerformanceFrequency() },
             time: unsafe { SDL_GetPerformanceCounter() },
             last_cursor: None,
             clipboard_data: None,
             mouse_cursors,
         };
-
-        println!("Result len: {}", result.mouse_cursors.len());
 
         unsafe {
             //io.raw_mut().BackendPlatformName = CString::new("imgui-impl-sdl2-sys").unwrap().as_ptr();
@@ -209,18 +199,7 @@ impl ImGuiSDL2 {
         }
 
         let (mut mx, mut my) = (0i32, 0i32);
-        let mouse_buttons = unsafe { SDL_GetMouseState(&mut mx, &mut my) };
-        io.mouse_down[0] = self.mouse_press[0] || (mouse_buttons & SDL_BUTTON_LEFT) != 0;
-        io.mouse_down[1] = self.mouse_press[1] || (mouse_buttons & SDL_BUTTON_RIGHT) != 0;
-        io.mouse_down[2] = self.mouse_press[2] || (mouse_buttons & SDL_BUTTON_MIDDLE) != 0;
-        io.mouse_down[3] = self.mouse_press[3] || (mouse_buttons & SDL_BUTTON_X1) != 0;
-        io.mouse_down[4] = self.mouse_press[4] || (mouse_buttons & SDL_BUTTON_X2) != 0;
-
-        self.mouse_press[0] = false;
-        self.mouse_press[1] = false;
-        self.mouse_press[2] = false;
-        self.mouse_press[3] = false;
-        self.mouse_press[4] = false;
+        unsafe { SDL_GetMouseState(&mut mx, &mut my) };
 
         if unsafe { SDL_GetWindowFlags(window as *mut SDL_Window) }
             & SDL_WindowFlags_SDL_WINDOW_INPUT_FOCUS
@@ -388,26 +367,26 @@ impl ImGuiSDL2 {
                 SDL_EventType_SDL_MOUSEBUTTONUP | SDL_EventType_SDL_MOUSEBUTTONDOWN => {
                     let button = event.button;
                     let mut mouse_button = -1;
+
                     if button.button == SDL_BUTTON_LEFT as u8 {
-                        self.mouse_press[0] = true;
                         mouse_button = 0;
                     };
                     if button.button == SDL_BUTTON_RIGHT as u8 {
-                        self.mouse_press[1] = true;
                         mouse_button = 1;
                     };
                     if button.button == SDL_BUTTON_MIDDLE as u8 {
-                        self.mouse_press[2] = true;
                         mouse_button = 2;
                     };
                     if button.button == SDL_BUTTON_X1 as u8 {
-                        self.mouse_press[3] = true;
                         mouse_button = 3;
                     };
                     if button.button == SDL_BUTTON_X2 as u8 {
-                        self.mouse_press[4] = true;
                         mouse_button = 4;
                     };
+
+                    if mouse_button == -1 {
+                        return false;
+                    }
 
                     imgui_sys::ImGuiIO_AddMouseButtonEvent(
                         io.raw_mut(),
@@ -472,7 +451,6 @@ impl ImGuiSDL2 {
         if io.mouse_draw_cursor || imgui_cursor == ImGuiMouseCursor_None {
             unsafe { SDL_ShowCursor(SDL_bool_SDL_FALSE as i32) };
         } else {
-            println!("self.mouse_cursors len: {}", self.mouse_cursors.len());
             let expected_cursor = match self.mouse_cursors[imgui_cursor as usize] as u64 {
                 0 => self.mouse_cursors[ImGuiMouseCursor_Arrow as usize],
                 _ => self.mouse_cursors[imgui_cursor as usize],
