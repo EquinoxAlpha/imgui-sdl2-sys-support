@@ -1,16 +1,14 @@
 #![allow(non_upper_case_globals)]
 #![allow(non_camel_case_types)]
+#![feature(let_chains)]
 
 pub extern crate sdl2_bindings;
 
-
-use std::ffi::CString;
-
 use sdl2_bindings::{
-    SDL_Event, SDL_EventType_SDL_KEYDOWN, SDL_EventType_SDL_KEYUP,
-    SDL_EventType_SDL_MOUSEBUTTONDOWN, SDL_EventType_SDL_MOUSEBUTTONUP,
+    SDL_CreateSystemCursor, SDL_Cursor, SDL_Event, SDL_EventType_SDL_KEYDOWN,
+    SDL_EventType_SDL_KEYUP, SDL_EventType_SDL_MOUSEBUTTONDOWN, SDL_EventType_SDL_MOUSEBUTTONUP,
     SDL_EventType_SDL_MOUSEMOTION, SDL_EventType_SDL_MOUSEWHEEL, SDL_EventType_SDL_TEXTINPUT,
-    SDL_GL_GetDrawableSize, SDL_GetMouseState, SDL_GetPerformanceCounter,
+    SDL_GL_GetDrawableSize, SDL_GetClipboardText, SDL_GetMouseState, SDL_GetPerformanceCounter,
     SDL_GetPerformanceFrequency, SDL_GetWindowFlags, SDL_GetWindowSize, SDL_KeyCode_SDLK_0,
     SDL_KeyCode_SDLK_1, SDL_KeyCode_SDLK_2, SDL_KeyCode_SDLK_3, SDL_KeyCode_SDLK_4,
     SDL_KeyCode_SDLK_5, SDL_KeyCode_SDLK_6, SDL_KeyCode_SDLK_7, SDL_KeyCode_SDLK_8,
@@ -42,24 +40,23 @@ use sdl2_bindings::{
     SDL_KeyCode_SDLK_s, SDL_KeyCode_SDLK_t, SDL_KeyCode_SDLK_u, SDL_KeyCode_SDLK_v,
     SDL_KeyCode_SDLK_w, SDL_KeyCode_SDLK_x, SDL_KeyCode_SDLK_y, SDL_KeyCode_SDLK_z, SDL_Keymod,
     SDL_Keymod_KMOD_ALT, SDL_Keymod_KMOD_CTRL, SDL_Keymod_KMOD_GUI, SDL_Keymod_KMOD_SHIFT,
-    SDL_Scancode_SDL_SCANCODE_A, SDL_Scancode_SDL_SCANCODE_BACKSPACE, SDL_Scancode_SDL_SCANCODE_C,
-    SDL_Scancode_SDL_SCANCODE_DELETE, SDL_Scancode_SDL_SCANCODE_DOWN,
-    SDL_Scancode_SDL_SCANCODE_END, SDL_Scancode_SDL_SCANCODE_ESCAPE,
-    SDL_Scancode_SDL_SCANCODE_HOME, SDL_Scancode_SDL_SCANCODE_KP_ENTER,
-    SDL_Scancode_SDL_SCANCODE_LEFT, SDL_Scancode_SDL_SCANCODE_PAGEDOWN,
-    SDL_Scancode_SDL_SCANCODE_PAGEUP, SDL_Scancode_SDL_SCANCODE_RIGHT,
-    SDL_Scancode_SDL_SCANCODE_SPACE, SDL_Scancode_SDL_SCANCODE_TAB, SDL_Scancode_SDL_SCANCODE_UP,
-    SDL_Scancode_SDL_SCANCODE_V, SDL_Scancode_SDL_SCANCODE_X, SDL_Scancode_SDL_SCANCODE_Y,
-    SDL_Scancode_SDL_SCANCODE_Z, SDL_ShowCursor, SDL_WarpMouseInWindow, SDL_Window,
-    SDL_WindowFlags_SDL_WINDOW_INPUT_FOCUS, SDL_WindowFlags_SDL_WINDOW_MINIMIZED,
-    SDL_bool_SDL_FALSE, SDL_bool_SDL_TRUE, SDL_BUTTON_LEFT, SDL_BUTTON_MIDDLE, SDL_BUTTON_RIGHT,
-    SDL_BUTTON_X1, SDL_BUTTON_X2, SDL_Cursor, SDL_CreateSystemCursor, SDL_SystemCursor_SDL_SYSTEM_CURSOR_ARROW, SDL_SystemCursor_SDL_SYSTEM_CURSOR_IBEAM, SDL_SystemCursor_SDL_SYSTEM_CURSOR_SIZEALL, SDL_SystemCursor_SDL_SYSTEM_CURSOR_SIZENS, SDL_SystemCursor_SDL_SYSTEM_CURSOR_SIZEWE, SDL_SystemCursor_SDL_SYSTEM_CURSOR_SIZENESW, SDL_SystemCursor_SDL_SYSTEM_CURSOR_SIZENWSE, SDL_SystemCursor_SDL_SYSTEM_CURSOR_HAND, SDL_SystemCursor_SDL_SYSTEM_CURSOR_NO, SDL_SetClipboardText, SDL_Rect, SDL_SetTextInputRect,
-    SDL_free, SDL_GetClipboardText,
+    SDL_Rect, SDL_SetClipboardText, SDL_SetCursor, SDL_SetTextInputRect,
+    SDL_ShowCursor, SDL_SystemCursor_SDL_SYSTEM_CURSOR_ARROW,
+    SDL_SystemCursor_SDL_SYSTEM_CURSOR_HAND, SDL_SystemCursor_SDL_SYSTEM_CURSOR_IBEAM,
+    SDL_SystemCursor_SDL_SYSTEM_CURSOR_NO, SDL_SystemCursor_SDL_SYSTEM_CURSOR_SIZEALL,
+    SDL_SystemCursor_SDL_SYSTEM_CURSOR_SIZENESW, SDL_SystemCursor_SDL_SYSTEM_CURSOR_SIZENS,
+    SDL_SystemCursor_SDL_SYSTEM_CURSOR_SIZENWSE, SDL_SystemCursor_SDL_SYSTEM_CURSOR_SIZEWE,
+    SDL_WarpMouseInWindow, SDL_Window, SDL_WindowFlags_SDL_WINDOW_INPUT_FOCUS,
+    SDL_WindowFlags_SDL_WINDOW_MINIMIZED, SDL_bool_SDL_FALSE, SDL_bool_SDL_TRUE, SDL_free,
+    SDL_BUTTON_LEFT, SDL_BUTTON_MIDDLE, SDL_BUTTON_RIGHT, SDL_BUTTON_X1, SDL_BUTTON_X2,
 };
 
 use imgui_sys::{
-    ImGuiKey_F10, ImGuiKey_None, ImGuiMod_Alt, ImGuiMod_Ctrl, ImGuiMod_Shift, ImGuiMod_Super,
-    ImGuiMouseCursor_None, ImGuiMouseCursor_Arrow, ImGuiMouseCursor_TextInput, ImGuiMouseCursor_ResizeAll, ImGuiMouseCursor_ResizeNS, ImGuiMouseCursor_ResizeNESW, ImGuiMouseCursor_ResizeNWSE, ImGuiMouseCursor_ResizeEW, ImGuiMouseCursor_Hand, ImGuiMouseCursor_NotAllowed, cty, ImGuiPlatformImeData,
+    cty, ImGuiKey_F10, ImGuiKey_None, ImGuiKey_Q, ImGuiMod_Alt, ImGuiMod_Ctrl, ImGuiMod_Shift,
+    ImGuiMod_Super, ImGuiMouseCursor_Arrow, ImGuiMouseCursor_Hand, ImGuiMouseCursor_None,
+    ImGuiMouseCursor_NotAllowed, ImGuiMouseCursor_ResizeAll, ImGuiMouseCursor_ResizeEW,
+    ImGuiMouseCursor_ResizeNESW, ImGuiMouseCursor_ResizeNS, ImGuiMouseCursor_ResizeNWSE,
+    ImGuiMouseCursor_TextInput, ImGuiPlatformImeData,
 };
 
 use imgui_sys::{
@@ -77,14 +74,14 @@ use imgui_sys::{
     ImGuiKey_L, ImGuiKey_LeftAlt, ImGuiKey_LeftArrow, ImGuiKey_LeftBracket, ImGuiKey_LeftCtrl,
     ImGuiKey_LeftShift, ImGuiKey_LeftSuper, ImGuiKey_M, ImGuiKey_Menu, ImGuiKey_Minus, ImGuiKey_N,
     ImGuiKey_NumLock, ImGuiKey_O, ImGuiKey_P, ImGuiKey_PageDown, ImGuiKey_PageUp, ImGuiKey_Pause,
-    ImGuiKey_Period, ImGuiKey_PrintScreen, ImGuiKey_Q, ImGuiKey_R, ImGuiKey_RightAlt,
-    ImGuiKey_RightArrow, ImGuiKey_RightBracket, ImGuiKey_RightCtrl, ImGuiKey_RightShift,
-    ImGuiKey_RightSuper, ImGuiKey_S, ImGuiKey_ScrollLock, ImGuiKey_Semicolon, ImGuiKey_Slash,
-    ImGuiKey_Space, ImGuiKey_T, ImGuiKey_Tab, ImGuiKey_U, ImGuiKey_UpArrow, ImGuiKey_V, ImGuiKey_W,
-    ImGuiKey_X, ImGuiKey_Y, ImGuiKey_Z,
+    ImGuiKey_Period, ImGuiKey_PrintScreen, ImGuiKey_R, ImGuiKey_RightAlt, ImGuiKey_RightArrow,
+    ImGuiKey_RightBracket, ImGuiKey_RightCtrl, ImGuiKey_RightShift, ImGuiKey_RightSuper,
+    ImGuiKey_S, ImGuiKey_ScrollLock, ImGuiKey_Semicolon, ImGuiKey_Slash, ImGuiKey_Space,
+    ImGuiKey_T, ImGuiKey_Tab, ImGuiKey_U, ImGuiKey_UpArrow, ImGuiKey_V, ImGuiKey_W, ImGuiKey_X,
+    ImGuiKey_Y, ImGuiKey_Z,
 };
 
-use imgui::{internal::RawCast, Context, Io, Key};
+use imgui::{internal::RawCast, Context, Io};
 
 pub struct ImGuiSDL2 {
     mouse_press: [bool; 5],
@@ -95,38 +92,48 @@ pub struct ImGuiSDL2 {
     mouse_cursors: Vec<*mut SDL_Cursor>,
 }
 
+unsafe impl Send for ImGuiSDL2 {}
+unsafe impl Sync for ImGuiSDL2 {}
+
 impl ImGuiSDL2 {
     pub fn new(imgui: &mut Context) -> Self {
         let io = imgui.io_mut();
-        io.key_map[Key::Tab as usize] = SDL_Scancode_SDL_SCANCODE_TAB;
-        io.key_map[Key::LeftArrow as usize] = SDL_Scancode_SDL_SCANCODE_LEFT;
-        io.key_map[Key::RightArrow as usize] = SDL_Scancode_SDL_SCANCODE_RIGHT;
-        io.key_map[Key::UpArrow as usize] = SDL_Scancode_SDL_SCANCODE_UP;
-        io.key_map[Key::DownArrow as usize] = SDL_Scancode_SDL_SCANCODE_DOWN;
-        io.key_map[Key::PageUp as usize] = SDL_Scancode_SDL_SCANCODE_PAGEUP;
-        io.key_map[Key::PageDown as usize] = SDL_Scancode_SDL_SCANCODE_PAGEDOWN;
-        io.key_map[Key::Home as usize] = SDL_Scancode_SDL_SCANCODE_HOME;
-        io.key_map[Key::End as usize] = SDL_Scancode_SDL_SCANCODE_END;
-        io.key_map[Key::Delete as usize] = SDL_Scancode_SDL_SCANCODE_DELETE;
-        io.key_map[Key::Backspace as usize] = SDL_Scancode_SDL_SCANCODE_BACKSPACE;
-        io.key_map[Key::Enter as usize] = SDL_Scancode_SDL_SCANCODE_KP_ENTER;
-        io.key_map[Key::Escape as usize] = SDL_Scancode_SDL_SCANCODE_ESCAPE;
-        io.key_map[Key::Space as usize] = SDL_Scancode_SDL_SCANCODE_SPACE;
-        io.key_map[Key::A as usize] = SDL_Scancode_SDL_SCANCODE_A;
-        io.key_map[Key::C as usize] = SDL_Scancode_SDL_SCANCODE_C;
-        io.key_map[Key::V as usize] = SDL_Scancode_SDL_SCANCODE_V;
-        io.key_map[Key::X as usize] = SDL_Scancode_SDL_SCANCODE_X;
-        io.key_map[Key::Y as usize] = SDL_Scancode_SDL_SCANCODE_Y;
-        io.key_map[Key::Z as usize] = SDL_Scancode_SDL_SCANCODE_Z;
 
         io.backend_flags |= imgui::BackendFlags::HAS_MOUSE_CURSORS;
         io.backend_flags |= imgui::BackendFlags::HAS_SET_MOUSE_POS;
-        
 
-        
         let mut mouse_cursors: Vec<*mut SDL_Cursor> = Vec::with_capacity(9);
 
-        let mut result = Self {
+        unsafe {
+            mouse_cursors.set_len(9);
+
+            mouse_cursors[ImGuiMouseCursor_Arrow as usize] =
+                SDL_CreateSystemCursor(SDL_SystemCursor_SDL_SYSTEM_CURSOR_ARROW);
+            mouse_cursors[ImGuiMouseCursor_TextInput as usize] =
+                SDL_CreateSystemCursor(SDL_SystemCursor_SDL_SYSTEM_CURSOR_IBEAM);
+            mouse_cursors[ImGuiMouseCursor_ResizeAll as usize] =
+                SDL_CreateSystemCursor(SDL_SystemCursor_SDL_SYSTEM_CURSOR_SIZEALL);
+            mouse_cursors[ImGuiMouseCursor_ResizeNS as usize] =
+                SDL_CreateSystemCursor(SDL_SystemCursor_SDL_SYSTEM_CURSOR_SIZENS);
+            mouse_cursors[ImGuiMouseCursor_ResizeEW as usize] =
+                SDL_CreateSystemCursor(SDL_SystemCursor_SDL_SYSTEM_CURSOR_SIZEWE);
+            mouse_cursors[ImGuiMouseCursor_ResizeNESW as usize] =
+                SDL_CreateSystemCursor(SDL_SystemCursor_SDL_SYSTEM_CURSOR_SIZENESW);
+            mouse_cursors[ImGuiMouseCursor_ResizeNWSE as usize] =
+                SDL_CreateSystemCursor(SDL_SystemCursor_SDL_SYSTEM_CURSOR_SIZENWSE);
+            mouse_cursors[ImGuiMouseCursor_Hand as usize] =
+                SDL_CreateSystemCursor(SDL_SystemCursor_SDL_SYSTEM_CURSOR_HAND);
+            mouse_cursors[ImGuiMouseCursor_NotAllowed as usize] =
+                SDL_CreateSystemCursor(SDL_SystemCursor_SDL_SYSTEM_CURSOR_NO);
+        }
+
+        //for _ in 0..9 {
+        //    mouse_cursors.push(std::ptr::null_mut());
+        //}
+
+        println!("len: {}", mouse_cursors.len());
+
+        let result = Self {
             mouse_press: [false; 5],
             frequency: unsafe { SDL_GetPerformanceFrequency() },
             time: unsafe { SDL_GetPerformanceCounter() },
@@ -134,6 +141,8 @@ impl ImGuiSDL2 {
             clipboard_data: None,
             mouse_cursors,
         };
+
+        println!("Result len: {}", result.mouse_cursors.len());
 
         unsafe {
             //io.raw_mut().BackendPlatformName = CString::new("imgui-impl-sdl2-sys").unwrap().as_ptr();
@@ -144,16 +153,6 @@ impl ImGuiSDL2 {
             io.raw_mut().ClipboardUserData = 0 as *mut cty::c_void;
 
             io.raw_mut().SetPlatformImeDataFn = Some(Self::set_platform_ime_data);
-
-            result.mouse_cursors[ImGuiMouseCursor_Arrow as usize] = SDL_CreateSystemCursor(SDL_SystemCursor_SDL_SYSTEM_CURSOR_ARROW);
-            result.mouse_cursors[ImGuiMouseCursor_TextInput as usize] = SDL_CreateSystemCursor(SDL_SystemCursor_SDL_SYSTEM_CURSOR_IBEAM);
-            result.mouse_cursors[ImGuiMouseCursor_ResizeAll as usize] = SDL_CreateSystemCursor(SDL_SystemCursor_SDL_SYSTEM_CURSOR_SIZEALL);
-            result.mouse_cursors[ImGuiMouseCursor_ResizeNS as usize] = SDL_CreateSystemCursor(SDL_SystemCursor_SDL_SYSTEM_CURSOR_SIZENS);
-            result.mouse_cursors[ImGuiMouseCursor_ResizeEW as usize] = SDL_CreateSystemCursor(SDL_SystemCursor_SDL_SYSTEM_CURSOR_SIZEWE);
-            result.mouse_cursors[ImGuiMouseCursor_ResizeNESW as usize] = SDL_CreateSystemCursor(SDL_SystemCursor_SDL_SYSTEM_CURSOR_SIZENESW);
-            result.mouse_cursors[ImGuiMouseCursor_ResizeNWSE as usize] = SDL_CreateSystemCursor(SDL_SystemCursor_SDL_SYSTEM_CURSOR_SIZENWSE);
-            result.mouse_cursors[ImGuiMouseCursor_Hand as usize] = SDL_CreateSystemCursor(SDL_SystemCursor_SDL_SYSTEM_CURSOR_HAND);
-            result.mouse_cursors[ImGuiMouseCursor_NotAllowed as usize] = SDL_CreateSystemCursor(SDL_SystemCursor_SDL_SYSTEM_CURSOR_NO);
         }
 
         result
@@ -162,17 +161,18 @@ impl ImGuiSDL2 {
     unsafe fn get_backend_data() -> Option<*mut Self> {
         match imgui_sys::igGetCurrentContext() as usize {
             0 => None,
-            _ => {
-                Some((*imgui_sys::igGetIO()).BackendPlatformUserData as *mut Self)
-            }
+            _ => Some((*imgui_sys::igGetIO()).BackendPlatformUserData as *mut Self),
         }
     }
 
-    unsafe extern "C" fn set_clipboard_text(user_data: *mut cty::c_void, text: *const cty::c_char) {
+    unsafe extern "C" fn set_clipboard_text(_: *mut cty::c_void, text: *const cty::c_char) {
         SDL_SetClipboardText(text);
     }
 
-    unsafe extern "C" fn set_platform_ime_data(_: *mut imgui_sys::ImGuiViewport, data: *mut ImGuiPlatformImeData) {
+    unsafe extern "C" fn set_platform_ime_data(
+        _: *mut imgui_sys::ImGuiViewport,
+        data: *mut ImGuiPlatformImeData,
+    ) {
         let data = &*data;
         if data.WantVisible {
             let rect = SDL_Rect {
@@ -377,24 +377,10 @@ impl ImGuiSDL2 {
         unsafe {
             match event.type_ {
                 SDL_EventType_SDL_MOUSEWHEEL => {
-                    //let wheel = event.wheel;
-                    //if wheel.mouseX > 0 {
-                    //    io.mouse_wheel_h += 1.0
-                    //};
-                    //if wheel.mouseX < 0 {
-                    //    io.mouse_wheel_h -= 1.0
-                    //};
-                    //if wheel.mouseY > 0 {
-                    //    io.mouse_wheel += 1.0
-                    //};
-                    //if wheel.mouseY < 0 {
-                    //    io.mouse_wheel -= 1.0
-                    //};
-
                     imgui_sys::ImGuiIO_AddMouseWheelEvent(
                         io.raw_mut(),
-                        -event.wheel.preciseX,
-                        event.wheel.preciseY,
+                        -event.wheel.x as f32,
+                        event.wheel.y as f32,
                     );
 
                     true
@@ -433,7 +419,7 @@ impl ImGuiSDL2 {
                 }
                 SDL_EventType_SDL_TEXTINPUT => {
                     static mut last_timestamp: u32 = 0;
-                    // Hack to prevent double input bug
+                    // Hack to prevent double input bug, no idea what causes it but it occurs during testing
                     if event.text.timestamp != last_timestamp {
                         imgui_sys::ImGuiIO_AddInputCharactersUTF8(
                             io.raw_mut(),
@@ -486,7 +472,16 @@ impl ImGuiSDL2 {
         if io.mouse_draw_cursor || imgui_cursor == ImGuiMouseCursor_None {
             unsafe { SDL_ShowCursor(SDL_bool_SDL_FALSE as i32) };
         } else {
-            let cursor = self.mouse_cursors[imgui_cursor as usize];
+            println!("self.mouse_cursors len: {}", self.mouse_cursors.len());
+            let expected_cursor = match self.mouse_cursors[imgui_cursor as usize] as u64 {
+                0 => self.mouse_cursors[ImGuiMouseCursor_Arrow as usize],
+                _ => self.mouse_cursors[imgui_cursor as usize],
+            };
+
+            if let Some(last_cursor) = self.last_cursor && last_cursor != expected_cursor {
+                unsafe { SDL_SetCursor(expected_cursor) };
+                self.last_cursor = Some(expected_cursor);
+            }
 
             unsafe { SDL_ShowCursor(SDL_bool_SDL_TRUE as i32) };
         }
