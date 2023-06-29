@@ -19,7 +19,7 @@ use sdl2_bindings::{
 
 use imgui::{internal::RawCast, Context, Key};
 
-struct ImGuiSDL2<'a> {
+pub struct ImGuiSDL2<'a> {
     mouse_press: [bool; 5],
     window: &'a mut SDL_Window,
     frequency: u64,
