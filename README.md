@@ -4,7 +4,7 @@ Simple SDL2 input handling support for imgui-rs using only C bindings
 ## Why?
 I was working on a project that involved hooking some SDL2 functions inside another program. For that reason, I only had access to their C representation (which makes using the sdl2 crate impossible), and other crates that provide this support all use the sdl2 crate. So I rewrote the original dear imgui SDL2 support in Rust.
 
-However, the sdl2_sys bindings were missing a lot of definitions to make them suitable for this, so I had to generate my own with bindgen. You can find the bindings used for this in the src/bindings directory. 
+However, the sdl2_sys bindings were missing a lot of definitions to make them suitable for this, so I had to generate my own with bindgen. The bindings can be found in the src/bindings.rs file.
 
 ## Usage
 Initialize the ImGuiSDL2 struct:

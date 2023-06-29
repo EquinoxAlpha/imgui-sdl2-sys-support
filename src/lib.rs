@@ -1,7 +1,12 @@
+
+#![allow(non_upper_case_globals)]
+#![allow(non_camel_case_types)]
+pub mod bindings;
+
 use imgui_sys::{
     ImGuiKey_F10, ImGuiKey_None, ImGuiMod_Alt, ImGuiMod_Ctrl, ImGuiMod_Shift, ImGuiMod_Super,
 };
-use sdl2_bindings::{
+use bindings::{
     SDL_Event, SDL_EventType_SDL_KEYDOWN, SDL_EventType_SDL_KEYUP,
     SDL_EventType_SDL_MOUSEBUTTONDOWN, SDL_EventType_SDL_MOUSEMOTION, SDL_EventType_SDL_MOUSEWHEEL,
     SDL_EventType_SDL_TEXTINPUT, SDL_GL_GetDrawableSize, SDL_GetMouseState,
@@ -70,8 +75,6 @@ use imgui_sys::{
     ImGuiKey_Space, ImGuiKey_T, ImGuiKey_Tab, ImGuiKey_U, ImGuiKey_UpArrow, ImGuiKey_V, ImGuiKey_W,
     ImGuiKey_X, ImGuiKey_Y, ImGuiKey_Z,
 };
-
-pub extern crate sdl2_bindings;
 
 use imgui::{internal::RawCast, Context, Key, Io};
 
